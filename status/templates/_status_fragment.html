@@ -19,7 +19,7 @@
             </li>
             {% endfor %}
         </ul>
-        <p class="updated-at">Last update at {{ snapshot.updated_at.strftime("%d %b %Y %H:%M:%S") }}</p>
+        <p class="updated-at">Last update at {{ snapshot.updated_at.astimezone().strftime("%d %b %Y %H:%M:%S") }}</p>
         {% endif %}
     </div>
 </div>

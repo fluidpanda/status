@@ -13,7 +13,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     task = asyncio.create_task(poller.background_loop())
     try:
         yield

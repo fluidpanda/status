@@ -1,0 +1,25 @@
+<div id="status-list">
+    {% if snapshot is none %}
+    <p class="hint">Ожидаем первый опрос face...</p>
+    {% else %}
+    {% if snapshot.stale %}
+    <p class="stale-warning">Данные устарели - последний опрос face не удался</p>
+    {% endif %}
+    <ul>
+        {% for node in snapshot.nodes %}
+        {% set color = 'red' if not node.available else ('blue' if node.role == 'backup' else 'green') %}
+        <li>
+            <span class="dot dot-{{ color }}"></span>
+            <span class="node-name">{{ node.name }}</span>
+            {% if node.avg_rtt_ms is not none %}
+            <span class="rtt">{{ "%.1f"|format(node.avg_rtt_ms) }} ms</span>
+            {% endif %}
+            {% if node.role == "secondary" and node.active %}
+            <span class="active-badge">активен</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <p class="updated-at">Обновлено: {{ snapshot.updated_at.strftime("%H:%M:%S") }}</p>
+    {% endif %}
+</div>

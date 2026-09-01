@@ -32,12 +32,16 @@ def connect() -> SSHClient:
     return client
 
 
+class RouterOSError(RuntimeError):
+    """Raised when a RouterOS command returns something on stderr."""
+
+
 def run_command(client: SSHClient, command: str) -> str:
     _, stdout, stderr = client.exec_command(command, timeout=settings.ssh_timeout_seconds)
     output = stdout.read().decode()
     error = stderr.read().decode()
     if error.strip():
-        raise RuntimeError(f"RouterOS error for '{command}': {error.strip()}")
+        raise RouterOSError(f"RouterOS error for '{command}': {error.strip()}")
     return output
 
 

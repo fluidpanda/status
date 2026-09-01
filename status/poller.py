@@ -2,14 +2,18 @@ import asyncio
 import logging
 from datetime import datetime, timezone
 
+import paramiko
+
 from .config import settings
-from .mikrotik_client import poll_face
+from .mikrotik_client import RouterOSError, poll_face
 from .models import NetworkSnapshot
 
 logger = logging.getLogger(__name__)
 
 _snapshot: NetworkSnapshot | None = None
 _lock = asyncio.Lock()
+
+_EXPECTED_POLL_ERRORS = (OSError, paramiko.SSHException, RouterOSError)
 
 
 def get_snapshot() -> NetworkSnapshot | None:
@@ -35,7 +39,7 @@ async def refresh() -> NetworkSnapshot:
                 updated_at=datetime.now(timezone.utc),
                 stale=False,
             )
-        except Exception:
+        except _EXPECTED_POLL_ERRORS:
             logger.exception("Failed to poll face")
             if _snapshot is not None:
                 _snapshot = _snapshot.model_copy(update={"stale": True})

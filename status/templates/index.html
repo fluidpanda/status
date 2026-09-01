@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>idlehive - network status</title>
-    <script src="/status/staticin.js"></script>
+    <script src="/static/htmx.min.js"></script>
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <style>
@@ -12,55 +12,43 @@
             font-feature-settings: "cv05";
             font-kerning: normal;
             font-variant-ligatures: common-ligatures contextual;
-            font-variant-numeric: slashed-zero tabular-nums;
+            font-variant-numeric: tabular-nums;
             font-weight: 400;
             hyphens: auto;
             tab-size: 2em;
-        }
-
-        @supports (font-variation-settings: normal) {
-            :root {
-                font-family: Inter, sans-serif;
-                font-feature-settings: "cv05";
-                font-kerning: normal;
-                font-variant-ligatures: common-ligatures contextual;
-                font-variant-numeric: slashed-zero tabular-nums;
-                font-weight: 400;
-                hyphens: auto;
-                tab-size: 2em;
-            }
         }
 
         body {
             background: gainsboro;
             color: dimgray;
             font-size: 0.8rem;
-            margin: 0 auto;
-            max-width: 480px;
-            padding: 2rem;
+            max-width: 16rem;
+            margin: 0;
+            padding-top: 0.2rem;
+            padding-left: 1rem;
         }
 
         h1 {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         ul {
             list-style: none;
             padding: 0;
-            margin: 1rem 0;
+            margin: 0.5rem 0;
         }
 
         li {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.4rem;
             padding: 0.4rem 0;
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 0.55rem;
+            height: 0.55rem;
             border-radius: 50%;
             display: inline-block;
             flex-shrink: 0;
@@ -83,53 +71,29 @@
         }
 
         .rtt {
-            color: darkgoldenrod;
-            font-size: 0.9rem;
             margin-left: auto;
-        }
-
-        .active-badge {
-            font-size: 0.75rem;
-            color: #3e8ecf;
-            border: 1px solid #3e8ecf;
-            border-radius: 4px;
-            padding: 0 0.4em;
+            font-size: 0.7rem;
         }
 
         .stale-warning {
-            color: #cfa23e;
+            color: darkgoldenrod;
         }
 
-        .hint {
-            color: #6b7076;
-        }
-
-        .updated-at {
-            color: #6b7076;
+        .updated-at, .hint {
             font-size: 0.85em;
             margin-top: 1rem;
         }
 
-        button {
-            background: palegoldenrod;
+        h1 a {
             color: darkslategray;
-            border: 0;
-            border-radius: 0.6rem;
-            padding: 0.4rem 0.6rem;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: lightgoldenrodyellow;
         }
     </style>
 </head>
 <body>
-<h1>idlehive status</h1>
+<h1>idlehive network status <a href="#" hx-post="/fragment/status/refresh" hx-target="#status-list"
+                       hx-swap="outerHTML">refresh</a></h1>
 
 {% include "_status_fragment.html" %}
-
-<button hx-post="/fragment/status/refresh" hx-target="#status-list" hx-swap="outerHTML">refresh</button>
 
 <div hx-get="/fragment/status" hx-trigger="every 60s" hx-target="#status-list" hx-swap="outerHTML"
      style="display:none"></div>

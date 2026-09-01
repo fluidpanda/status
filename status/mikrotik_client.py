@@ -130,7 +130,7 @@ def fetch_failover_routes(client: SSHClient) -> dict[str, dict]:
     Every default-route candidate in routing-table=remote, with
     its distance and whether RouterOS currently has it active - NOT
     filtered down to just the active one, on purpose. With both
-    candidates in hand, role (primary/backup) can be worked out from
+    candidates in hand, role (primary/secondary) can be worked out from
     distance instead of hardcoded in config: lower distance is
     primary by RouterOS's own convention, and the leading "A" flag
     in terse output says which one actually won right now.

@@ -10,6 +10,7 @@ class NodeStatus(BaseModel):
     avg_rtt_ms: float | int | None = None
     role: Literal["primary", "secondary"] | None = None
     active: bool | None = None
+    recovered_at: datetime | None = None
 
 
 class NetworkSnapshot(BaseModel):

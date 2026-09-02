@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>network status</title>
     <script src="/static/htmx.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="status">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a1a">
+
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
     <style>
         :root {
             font-family: Inter, sans-serif;
@@ -15,22 +25,31 @@
             font-variant-numeric: tabular-nums;
             hyphens: auto;
             tab-size: 2em;
+            font-size: 1.1rem;
         }
 
         body {
-            background-size: 100%;
+            background-size: cover;
             background-image: url(/static/bird.gif);
+            background-repeat: no-repeat;
+            background-color: black;
             color: gainsboro;
             font-size: 0.8rem;
-            max-width: 16rem;
+            max-width: min(28rem, 90vw);
+            width: 28rem;
             margin: 0;
-            padding-top: 1.2rem;
-            padding-left: 2rem;
+            padding-top: 0.8rem;
+            padding-left: 1rem;
+        }
+
+        html, body {
+            min-height: 100%;
         }
 
         h1 {
             font-size: 1rem;
             font-weight: 500;
+            padding-bottom: 0.8rem;
         }
 
         h1 a {
@@ -38,15 +57,18 @@
         }
 
         ul {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            row-gap: 0.8rem;
+            column-gap: 0.4rem;
+            align-items: center;
             list-style: none;
             padding: 0;
             margin: 0.5rem 0;
         }
 
         li {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
+            display: contents;
             padding: 0.4rem 0;
         }
 
@@ -74,9 +96,21 @@
             min-width: 5rem;
         }
 
-        .rtt {
-            margin-left: auto;
+        .rtt, .recovered {
             font-size: 0.7rem;
+        }
+
+        .rtt {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .recovered {
+            padding-left: 0.7rem;
+        }
+
+        .no-wrap {
+            white-space: nowrap;
         }
 
         .stale-warning {
@@ -90,8 +124,10 @@
     </style>
 </head>
 <body>
-<h1>network status <a href="#" hx-post="/fragment/status/refresh" hx-target="#status-list"
-                      hx-swap="outerHTML">refresh</a></h1>
+<h1>network status
+    <a href="#" hx-post="/fragment/status/refresh" hx-target="#status-list"
+       hx-swap="outerHTML">refresh</a>
+</h1>
 
 {% include "_status_fragment.html" %}
 

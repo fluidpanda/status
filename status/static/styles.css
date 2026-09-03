@@ -1,0 +1,104 @@
+:root {
+    font-family: Inter, sans-serif;
+    font-feature-settings: "cv05";
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures contextual;
+    hyphens: auto;
+    tab-size: 2em;
+    font-size: 1.1rem;
+}
+
+body {
+    background-size: cover;
+    background-image: url(/static/bird.gif);
+    background-repeat: no-repeat;
+    background-color: black;
+    color: gainsboro;
+    font-size: 0.8rem;
+    max-width: min(28rem, 90vw);
+    width: 28rem;
+    margin: 0;
+    padding-top: 0.8rem;
+    padding-left: 1rem;
+}
+
+html, body {
+    min-height: 100%;
+}
+
+h1 {
+    font-size: 1rem;
+    font-weight: 500;
+    padding-bottom: 0.8rem;
+}
+
+h1 a {
+    color: lightgoldenrodyellow;
+    font-style: italic;
+}
+
+ul {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    row-gap: 0.8rem;
+    column-gap: 0.4rem;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+li {
+    display: contents;
+    padding: 0.4rem 0;
+}
+
+.dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.dot-green {
+    background: forestgreen;
+}
+
+.dot-blue {
+    background: blueviolet;
+}
+
+.dot-red {
+    background: orangered;
+}
+
+.node-name {
+    min-width: 5rem;
+}
+
+.rtt, .recovered {
+    font-size: 0.7rem;
+}
+
+.rtt {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.recovered {
+    padding-left: 0.7rem;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.stale-warning {
+    color: darkgoldenrod;
+}
+
+.updated-at, .hint {
+    font-size: 0.85em;
+    margin-top: 1rem;
+}

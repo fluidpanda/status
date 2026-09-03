@@ -138,6 +138,7 @@ def fetch_failover_routes(client: SSHClient) -> dict[str, dict]:
     distance instead of hardcoded in config: lower distance is
     primary by RouterOS's own convention, and the leading "A" flag
     in terse output says which one actually won right now.
+
     Returns {interface_name: {"distance": int, "active": bool}}.
     """
     output = run_command(

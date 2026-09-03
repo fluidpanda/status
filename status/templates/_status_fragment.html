@@ -10,17 +10,16 @@
         {% set color = 'red' if not node.available else ('blue' if node.role == 'secondary' else 'green') %}
         <li>
             <span class="dot dot-{{ color }}"></span>
-            <span class="node-name">{{ node.name }}</span>
-            <span class="rtt">{% if node.avg_rtt_ms is not none %}{{ "%.1f"|format(node.avg_rtt_ms) }} ms{% endif %}</span>
-            <span class="recovered">
+            <span class="node-name" title="node name">{{ node.name }}</span>
+            <span class="rtt" title="RTT">{% if node.avg_rtt_ms is not none %}{{ "%.1f"|format(node.avg_rtt_ms) }} ms{% endif %}</span>
+            <span class="recovered" title="status change on">
                 {% if node.recovered_at is not none %}
-                since
                 <span class="no-wrap">{{ node.recovered_at.astimezone().strftime("%d %b %Y %H:%M:%S") }}</span>
                 {% endif %}
             </span>
         </li>
         {% endfor %}
     </ul>
-    <p class="updated-at">Last update at {{ snapshot.updated_at.astimezone().strftime("%d %b %Y %H:%M:%S") }}</p>
+    <p class="updated-at">last update at {{ snapshot.updated_at.astimezone().strftime("%d %b %Y %H:%M:%S") }}</p>
     {% endif %}
 </div>

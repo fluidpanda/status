@@ -23,6 +23,7 @@ def connect() -> SSHClient:
     client.connect(
         hostname=settings.face_host,
         sock=sock,
+        port=settings.ssh_port,
         username=settings.ssh_username,
         key_filename=settings.ssh_key_path,
         timeout=settings.ssh_timeout_seconds,

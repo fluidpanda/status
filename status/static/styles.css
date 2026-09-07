@@ -3,6 +3,7 @@
     font-feature-settings: "cv05";
     font-kerning: normal;
     font-variant-ligatures: common-ligatures contextual;
+    font-variant-numeric: tabular-nums;
     hyphens: auto;
     tab-size: 2em;
     font-size: 1.1rem;

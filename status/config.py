@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     face_host: str = Field(default="")
     ssh_username: str = Field(default="")
     ssh_key_path: str = Field(default="")
+    ssh_port: str = Field(default="")
     routing_table: str = Field(default="")
     tunnel_network: str = Field(default="")
 

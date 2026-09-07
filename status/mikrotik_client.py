@@ -10,7 +10,7 @@ from .models import NodeStatus
 
 def connect() -> SSHClient:
     addr_info = socket.getaddrinfo(
-        settings.face_host, 22, socket.AF_INET, socket.SOCK_STREAM
+        settings.face_host, settings.ssh_port, socket.AF_INET, socket.SOCK_STREAM
     )
     family, socktype, proto, _, sockaddr = addr_info[0]
     sock = socket.socket(family, socktype, proto)

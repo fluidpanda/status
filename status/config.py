@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     ssh_port: str = Field(default="")
     routing_table: str = Field(default="")
     tunnel_network: str = Field(default="")
+    show_recovered: bool = Field(default=True)
 
     ssh_timeout_seconds: int = 10
     poll_interval_seconds: int = 15

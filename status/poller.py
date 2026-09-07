@@ -35,8 +35,9 @@ async def refresh() -> NetworkSnapshot:
         try:
             nodes = await asyncio.to_thread(poll_face)
             observed_at = datetime.now(timezone.utc)
-            previous_nodes = _snapshot.nodes if _snapshot is not None else None
-            _apply_recovery_timestamps(previous_nodes, nodes, observed_at)
+            if settings.show_recovered:
+                previous_nodes = _snapshot.nodes if _snapshot is not None else None
+                _apply_recovery_timestamps(previous_nodes, nodes, observed_at)
             _snapshot = NetworkSnapshot(
                 nodes=nodes,
                 updated_at=observed_at,

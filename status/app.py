@@ -14,9 +14,19 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 logger = logging.getLogger(__name__)
 
 
+def _crash_on_unexpected_failure(task: asyncio.Task) -> None:
+    if task.cancelled():
+        return
+    exc = task.exception()
+    if exc is not None:
+        logger.critical("Background poll loop died unexpectedly", exc_info=exc)
+        os._exit(1)
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     task = asyncio.create_task(poller.background_loop())
+    task.add_done_callback(_crash_on_unexpected_failure)
     try:
         yield
     finally:
@@ -49,25 +59,3 @@ async def status_refresh(request: Request):
     return templates.TemplateResponse(
         request, "_status_fragment.html", {"snapshot": snapshot}
     )
-
-
-def _crash_on_unexpected_failure(task: asyncio.Task) -> None:
-    if task.cancelled():
-        return
-    exc = task.exception()
-    if exc is not None:
-        logger.critical(
-            "Background poll loop died unexpectedly",
-            exc_info=exc,
-        )
-        os._exit(1)
-
-
-@asynccontextmanager
-async def lifespan(_app: FastAPI):
-    task = asyncio.create_task(poller.background_loop())
-    task.add_done_callback(_crash_on_unexpected_failure)
-    try:
-        yield
-    finally:
-        task.cancel()

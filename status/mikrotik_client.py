@@ -117,17 +117,19 @@ def fetch_node_tunnel_ips(client: SSHClient) -> dict[str, str]:
 
 def fetch_avg_rtt(
         client: SSHClient, target_ip: str, count: int | None = None
-) -> float | int | None:
-    """
-    Active /ping from face to target_ip, in the same SSH session.
-    Returns None on 100% packet loss or if the summary line couldn't
-    be parsed. Blocks for roughly `count` seconds on RouterOS - only
-    call this for nodes already known to be up.
-    """
+) -> float | None:
     count = count or settings.ping_count
     output = run_command(client, f"/ping address={target_ip} count={count}")
-    match = re.search(r"avg-rtt=(\d+(?:\.\d+)?)ms", output)
-    return float(match.group(1)) if match else None
+
+    loss_match = re.search(r"packet-loss=(\d+)%", output)
+    if loss_match and int(loss_match.group(1)) == 100:
+        return None
+
+    rtt_match = re.compile(r"avg-rtt=(\d+(?:\.\d+)?)(ms|us)").search(output)
+    if not rtt_match:
+        return None
+    value, unit = rtt_match.groups()
+    return float(value) / 1000 if unit == "us" else float(value)
 
 
 def fetch_failover_routes(client: SSHClient) -> dict[str, dict]:

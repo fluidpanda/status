@@ -10,7 +10,10 @@ from .models import NodeStatus
 
 def connect() -> SSHClient:
     addr_info = socket.getaddrinfo(
-        settings.face_host, settings.ssh_port, socket.AF_INET, socket.SOCK_STREAM
+        settings.face_host,
+        settings.ssh_port,
+        socket.AF_INET,
+        socket.SOCK_STREAM,
     )
     family, socktype, proto, _, sockaddr = addr_info[0]
     sock = socket.socket(family, socktype, proto)
@@ -41,7 +44,10 @@ class RouterOSError(RuntimeError):
 
 
 def run_command(client: SSHClient, command: str) -> str:
-    _, stdout, stderr = client.exec_command(command, timeout=settings.ssh_timeout_seconds)
+    _, stdout, stderr = client.exec_command(
+        command,
+        timeout=settings.ssh_timeout_seconds,
+    )
     output = stdout.read().decode()
     error = stderr.read().decode()
     if error.strip():
@@ -119,7 +125,9 @@ def fetch_node_tunnel_ips(client: SSHClient) -> dict[str, str]:
 
 
 def fetch_avg_rtt(
-        client: SSHClient, target_ip: str, count: int | None = None
+    client: SSHClient,
+    target_ip: str,
+    count: int | None = None,
 ) -> float | None:
     count = count or settings.ping_count
     output = run_command(client, f"/ping address={target_ip} count={count}")

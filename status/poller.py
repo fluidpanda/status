@@ -61,7 +61,9 @@ async def background_loop() -> None:
 
 
 def _apply_recovery_timestamps(
-        previous: list[NodeStatus] | None, current: list[NodeStatus], observed_at: datetime
+    previous: list[NodeStatus] | None,
+    current: list[NodeStatus],
+    observed_at: datetime,
 ) -> None:
     """
     Stamps each currently-available node with the last time it was

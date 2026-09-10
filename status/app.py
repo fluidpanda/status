@@ -34,15 +34,17 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
+app.mount(
+    "/static",
+    StaticFiles(directory=str(Path(__file__).parent / "static")),
+    name="static",
+)
 
 
 @app.get("/")
 async def index(request: Request):
     snapshot = poller.get_snapshot()
-    return templates.TemplateResponse(
-        request, "index.html", {"snapshot": snapshot}
-    )
+    return templates.TemplateResponse(request, "index.html", {"snapshot": snapshot})
 
 
 @app.get("/fragment/status")

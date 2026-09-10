@@ -19,7 +19,10 @@ def connect() -> SSHClient:
 
     client = SSHClient()
     client.set_missing_host_key_policy(RejectPolicy())
-    client.load_system_host_keys()
+    if settings.known_hosts_path:
+        client.load_system_host_keys(filename=settings.known_hosts_path)
+    else:
+        client.load_system_host_keys()
     client.connect(
         hostname=settings.face_host,
         sock=sock,

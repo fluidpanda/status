@@ -2,7 +2,7 @@ import ipaddress
 import re
 import socket
 
-from paramiko import SSHClient, RejectPolicy
+from paramiko import RejectPolicy, SSHClient
 
 from .config import settings
 from .models import NodeStatus

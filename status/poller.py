@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import paramiko
 
@@ -11,6 +11,7 @@ from .models import NetworkSnapshot, NodeStatus
 logger = logging.getLogger(__name__)
 
 _snapshot: NetworkSnapshot | None = None
+_last_refresh_at: datetime | None = None
 _lock = asyncio.Lock()
 
 _EXPECTED_POLL_ERRORS = (OSError, paramiko.SSHException, RouterOSError)
@@ -30,28 +31,35 @@ async def refresh() -> NetworkSnapshot:
     in-memory snapshot. On failure, keeps the last good snapshot but
     marks it stale rather than wiping it out.
     """
-    global _snapshot
+    global _snapshot, _last_refresh_at
     async with _lock:
-        try:
-            nodes = await asyncio.to_thread(poll_face)
-            observed_at = datetime.now(timezone.utc)
-            if settings.show_recovered:
-                previous_nodes = _snapshot.nodes if _snapshot is not None else None
-                _apply_recovery_timestamps(previous_nodes, nodes, observed_at)
-            _snapshot = NetworkSnapshot(
-                nodes=nodes,
-                updated_at=observed_at,
-                stale=False,
-            )
-        except _EXPECTED_POLL_ERRORS:
-            logger.exception("Failed to poll face")
-            if _snapshot is not None:
-                _snapshot = _snapshot.model_copy(update={"stale": True})
-            else:
+        now = datetime.now(timezone.utc)
+        throttled = _last_refresh_at is not None and now - _last_refresh_at < timedelta(
+            seconds=settings.min_refresh_interval
+        )
+        if not throttled:
+            _last_refresh_at = now
+            try:
+                nodes = await asyncio.to_thread(poll_face)
+                observed_at = datetime.now(timezone.utc)
+                if settings.show_recovered:
+                    previous_nodes = _snapshot.nodes if _snapshot is not None else None
+                    _apply_recovery_timestamps(previous_nodes, nodes, observed_at)
                 _snapshot = NetworkSnapshot(
-                    nodes=[], updated_at=datetime.now(timezone.utc), stale=True
+                    nodes=nodes, updated_at=observed_at, stale=False
                 )
-        return _snapshot
+            except _EXPECTED_POLL_ERRORS:
+                logger.exception("Failed to poll face")
+                if _snapshot is not None:
+                    _snapshot = _snapshot.model_copy(update={"stale": True})
+                else:
+                    _snapshot = NetworkSnapshot(
+                        nodes=[],
+                        updated_at=datetime.now(timezone.utc),
+                        stale=True,
+                    )
+    assert _snapshot is not None
+    return _snapshot
 
 
 async def background_loop() -> None:

@@ -7,6 +7,7 @@ class Settings(BaseSettings):
 
     face_host: str = Field(default="")
     known_hosts_path: str = Field(default="")
+    min_refresh_interval: int = Field(default=10)
     ping_count: int = Field(default=3)
     poll_interval_seconds: int = Field(default=15)
     routing_table: str = Field(default="")
